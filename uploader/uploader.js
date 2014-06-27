@@ -85,6 +85,9 @@ function(Component, initView, Model, fixture){
 			// 
 			// `uploadId` is used to so we can grab the uploader and abort
 			// the file upload
+			// 
+			// we save the function that aborts the upload in the object so
+			// we can grab it later
 			fileUploadAdd : function(ev, data){
 				var uploader = new File({
 					filename : data.files[0].name,
