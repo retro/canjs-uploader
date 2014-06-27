@@ -8,14 +8,17 @@ steal(
 'can/construct/proxy',
 function(Component, initView, Model, fixture){
 	
+
+	// Model constructor, used to save file metadata
 	var File = Model.extend({
-		create : 'POST /api/files'
+		create : 'POST /api/files',
+		destroy : 'DELETE /api/files/{id}',
 	}, {});
 
+
+	// Create fixtures for the file metadata
 	var id = 0;
-
 	fixture.delay = 2000;
-
 	fixture('POST /api/files', function(req){
 		var id = id++,
 			data = req.data;
@@ -26,13 +29,21 @@ function(Component, initView, Model, fixture){
 		return data;
 	});
 
+	fixture('DELETE /api/files/{id}', function(){
+		return {}
+	})
+
 	Component.extend({
 		tag : 'rt-uploader',
 		template : initView,
 		scope : {
 			init : function(){
+				// Initialize files as an empty array
 				this.attr('files', []);
 			},
+			// When user clicks the remove file button,
+			// just remove it from the list, we'll handle 
+			// everything else in the control (`events` object)
 			removeUpload : function(file, ev, el){
 				var idx = this.files.indexOf(file);
 				if(confirm('Are you sure?')){
@@ -41,6 +52,7 @@ function(Component, initView, Model, fixture){
 			}
 		},
 		helpers : {
+			// Pretty format for the file size
 			formatByteSize : function(size){
 				var i = -1;
 				var byteUnits = ['kB', 'MB', 'GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -56,6 +68,10 @@ function(Component, initView, Model, fixture){
 			}
 		},
 		events : {
+			// Initialize the fileupload library when the `rt-uploader` element
+			// is inserted in the page
+			// 
+			// `rt-uploader` will be used as a target for the drag and drop of files
 			" inserted" : function(){
 				this.element.find('.select-files').fileupload({
 					dropZone : this.element,
@@ -64,6 +80,11 @@ function(Component, initView, Model, fixture){
 					add : this.proxy('fileUploadAdd')
 				});
 			},
+			// When file is uploaded create a new instance of the `File` and 
+			// populate it with the data provided by the fileupload lib
+			// 
+			// `uploadId` is used to so we can grab the uploader and abort
+			// the file upload
 			fileUploadAdd : function(ev, data){
 				var uploader = new File({
 					filename : data.files[0].name,
@@ -81,9 +102,12 @@ function(Component, initView, Model, fixture){
 
 				this.scope.files.push(uploader);
 			},
+			// listen to the `fileuploadprogress` event and update the progress 
 			".select-files fileuploadprogress" : function(el, ev, data){
 				data.uploader.attr('progress', parseInt(data.loaded / data.total * 100, 10));
 			},
+			// when file is uploaded we will save metadata to a different location
+			// this way we can upload the file to a different server (eg. S3)
 			".select-files fileuploaddone" : function(el, ev, data){
 				var file     = data.uploader,
 					uploadId = file.attr('uploadId');
@@ -99,6 +123,10 @@ function(Component, initView, Model, fixture){
 				delete this._uploads[uploadId];
 				delete data.uploader;
 			},
+			// when file is removed from the list (user clicked on the remove file button)
+			// we iterate through the list of the removed files and check if it has the `uploadId`
+			// attribute. If it has, it means that file is still uploading and we cancel the upload
+			// otherwise we delete the file
 			"{scope.files} remove" : function(files, ev, removed, prop){
 				var self = this;
 				if(typeof prop === 'number'){
@@ -113,6 +141,8 @@ function(Component, initView, Model, fixture){
 					});
 				}
 			},
+			// We prevent the default behavior for the `dragover` and `drop` events on the 
+			// document since drag and drop is handled by the file upload component
 			"{document} drop" : function(el, ev){
 				ev.preventDefault();
 			},
