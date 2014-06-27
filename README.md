@@ -1,4 +1,4 @@
-# Example of the file upload component with CanJS
+# can.Component file upload
 
 [Presentation slides](https://speakerdeck.com/retro/file-uploading-with-can-dot-component-and-jquery-file-upload)
 
