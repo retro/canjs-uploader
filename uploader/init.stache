@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<b>File Uploader</b>
+	</div>
+	<div class="panel-body drop-files-body">
+		<i class="fa fa-cloud-upload"></i>
+		Drop files to upload
+	</div>
+
+	{{#if files.length}}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Filename</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#files}}
+						<tr>
+							<td>
+								<div class="progress progress-striped active {{#if isProcessed}}hidden-progress{{/if}}">
+									<div class="progress-bar" style="width: {{progress}}%"></div>
+								</div>
+								{{filename}} ({{formatByteSize size}})
+							</td>
+							<td class="actions-col">
+								<a href="javascript://" class="action-link" can-click="removeUpload">
+									<i class="fa fa-times-circle"></i>
+								</a>
+							</td>
+						</tr>
+					{{/files}}
+				</tbody>
+			</table>
+	{{/if}}
+
+	<div class="panel-footer clearfix">
+		<div class="btn-group">
+			<button class="btn btn-xs fileinput-button">
+				<i class="fa fa-plus"></i>
+				<span>Select files<span>
+				<input class="select-files" type="file" name="files" multiple>
+			</button>
+		</div>
+		
+	</div>
+</div>

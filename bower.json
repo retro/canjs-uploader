@@ -1,0 +1,22 @@
+{
+  "name": "canjs-presentation",
+  "version": "0.0.0",
+  "authors": [
+    "Mihael Konjevic <konjevic@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "steal": "~0.2.0",
+    "blueimp-file-upload": "~9.5.7",
+    "canjs": "git://github.com/bitovi/canjs.git#017d8aed847dc69e7abaae1bd3edb274c13cb89d",
+    "bootstrap": "~3.2.0"
+  }
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>Uploader demo page!</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.css">
+    <style>
+      #content {
+        margin: 50px auto;
+        width: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type='text/javascript' src="../bower_components/steal/steal.js" data-config="../stealconfig.js"></script>
+    <script type="text/javascript">
+      steal('uploader', function(){
+        var template = can.stache('<rt-uploader></rt-uploader>')
+        $('#content').html(template())
+      })
+    </script>
+  </body>
+</html>
